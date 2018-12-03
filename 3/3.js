@@ -8,7 +8,7 @@ const squareInchesOfOverlap = (inputs) => {
   inputs.reduce((seenMatrix, claim) => {
     const parts = regEx.exec(claim);
     // #1 @ 1,3: 4x4. 1col: 1, 2row: 3, 3colspan: 4, 4rowspan: 4 matching
-    const col = +parts[1], row = +parts[2], colspan = +parts[3], rowspan = +parts[4];
+    const col = +parts[1], row = +parts[2], colspan = +parts[3], rowspan = +parts[4]; // _|_ +++++
     for (let i = row; i < row + rowspan; i++) {
       if (!seenMatrix[i]) seenMatrix[i] = {};
       for (let j = col; j < col + colspan; j++) {
