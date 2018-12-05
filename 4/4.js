@@ -3,7 +3,7 @@ const input4 = readInput('input4.txt');
 
 // helper fn. HAHAHA
 const getRidiculousMapping = (inputs) => { // guardId mapped to total mins and counts of each min
-  const regex = /\[(\d{4}-\d{2}-\d{2} \d{2}\:\d{2})\] (?:Guard #(\d+) begins shift|(falls asleep)|(wakes up))/;
+  const regex = /\[(\d{4}-\d{2}-\d{2} \d{2}\:\d{2})\] (?:Guard #(\d+) begins shift|(falls asleep)|(wakes up))/; // prolly don't need to be so \d specific
   inputs = inputs.map(entry => {
     const parts = regex.exec(entry);
     let [match, date, guardId, sleepStart, sleepEnd] = parts;
@@ -16,15 +16,15 @@ const getRidiculousMapping = (inputs) => { // guardId mapped to total mins and c
     const {guardId} = entry;
     if (guardId) lastGuardId = guardId;
     if (entry.sleepStart) lastSleepStart = entry.date.getMinutes();
-    if (entry.sleepEnd) { // if (lastGuardId && lastSleepStart) { // should always be the case... simplify?
+    if (entry.sleepEnd) { // && lastGuardId && lastSleepStart should always be the case
       const lastSleepEnd = entry.date.getMinutes();
 
       let minsAsleepByGuardObj = minsAsleep[lastGuardId];
       minsAsleep[lastGuardId] = minsAsleepByGuardObj || (minsAsleepByGuardObj = {counts: new Map()});
       minsAsleepByGuardObj.mins = (minsAsleepByGuardObj.mins || 0) + (lastSleepEnd - lastSleepStart);
       const {counts} = minsAsleepByGuardObj; // countsForMin
-      for (let i = lastSleepStart; i < lastSleepEnd; i++) {
-        counts.set(i, (counts.get(i) || 0) + 1);
+      for (let m = lastSleepStart; m < lastSleepEnd; m++) {
+        counts.set(m, (counts.get(m) || 0) + 1);
       }
       lastSleepStart = null;
     }
@@ -75,19 +75,10 @@ const getGuardIdMostFrequentlyAsleepOnSameMinTimesMinute = (inputs) => {
 
   return pickedId * bestMinute;
 }
-/*
-#1 *
-sleep start
-sleep end
-sleep start
-sleep end
-#2 *
-sleep start
-sleep end
-*/
+
+console.log(getBestGuardIdTimesMinute(input4));
+console.log(getGuardIdMostFrequentlyAsleepOnSameMinTimesMinute(input4));
 
 // const test = '[1518-11-01 00:05] falls asleep\n[1518-11-01 00:25] wakes up\n[1518-11-01 00:30] falls asleep\n[1518-11-01 00:55] wakes up\n[1518-11-01 23:58] Guard #99 begins shift\n[1518-11-02 00:40] falls asleep\n[1518-11-02 00:50] wakes up\n[1518-11-03 00:05] Guard #10 begins shift\n[1518-11-03 00:24] falls asleep\n[1518-11-03 00:29] wakes up\n[1518-11-04 00:02] Guard #99 begins shift\n[1518-11-04 00:36] falls asleep\n[1518-11-04 00:46] wakes up\n[1518-11-05 00:03] Guard #99 begins shift\n[1518-11-05 00:45] falls asleep\n[1518-11-05 00:55] wakes up\n[1518-11-01 00:00] Guard #10 begins shift';
 // console.log(getBestGuardIdTimesMinute(test.split('\n')));
 // console.log(getGuardIdMostFrequentlyAsleepOnSameMinTimesMinute(test.split('\n')));
-console.log(getBestGuardIdTimesMinute(input4));
-console.log(getGuardIdMostFrequentlyAsleepOnSameMinTimesMinute(input4));
