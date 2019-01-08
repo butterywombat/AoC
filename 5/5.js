@@ -45,26 +45,21 @@ const getResultingPolymerLen = (input) => {
       input[i] = null;
       input[j] = null;
 
-      // TODO keep track of the last i of char searching backwards instead of this while loop. would cover the if case too...
+      // TODO keep track of the closest indices of valid chars searching backwards instead of this while loop. would cover the if case too...
       // or probably just splice, jeez
       // i = indexOfLastCharSearchingBackwards;
-
       while (typeof input[i] !== 'string' && i > -1) i--;
-      if (i === 0 && typeof input[0] !== 'string') {
-        i = j;
-      }
+      if (i === 0 && typeof input[0] !== 'string') i = j;
 
       j++;
       lastIterWasMatch = true; // went into this loop
     }
-    if (lastIterWasMatch) {
-      i = j;
-      j = i+1;
-    } else {
-      i++; j++;
-    }
+
+    i = lastIterWasMatch ? j : i+1;
+    j++;
     lastIterWasMatch = false;
   }
+
   return input.filter(c => typeof c !== 'undefined').join('').length;
 }
 
